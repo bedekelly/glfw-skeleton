@@ -13,3 +13,9 @@ Every discrete example of an application in the book gets its own branch in this
 5. [Moving the triangle using "in" variables](https://github.com/bedekelly/mac-gl/tree/triangle-offset)
 
 Just hit `make` to build the project. The binary is `build/main.out`.
+
+**System specs**
+
+* 15" rMBP, mid 2015
+* Intel Iris Pro 1536 MB
+* Sierra 10.12.3
