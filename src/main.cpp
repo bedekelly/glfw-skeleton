@@ -98,7 +98,10 @@ GLuint compileShaders() {
       "layout (location = 0) in vec4 offset;\n"
       "layout (location = 1) in vec4 color;\n"
 
-      "out vec4 vs_color;\n"
+      // Declare VS_OUT as an output interface block.
+      "out VS_OUT{\n"
+      "    vec4 color;"  // Send the colour to the next stage.
+      "} vs_out;"
 
       "void main(void){\n"
       "    const vec4 vertices[3] = vec4[3](\n"
@@ -108,7 +111,7 @@ GLuint compileShaders() {
       "        vec4(0, 0.25, 0.5, 1.0));\n"
       
       "    gl_Position = vertices[gl_VertexID] + offset;\n"
-      "    vs_color = color;\n"
+      "    vs_out.color = color;\n"
       "}\n"
     };
 
@@ -117,11 +120,15 @@ GLuint compileShaders() {
     {
       "#version 410 core\n"
 
-      "in vec4 vs_color;\n"
+      // Declare VS_OUT as an input interface block.
+      "in VS_OUT {\n"
+      "    vec4 color;\n"
+      "} fs_in;"
+
       "out vec4 color;\n"
 
       "void main(void){\n"
-      "    color = vs_color;\n"
+      "    color = fs_in.color;\n"
       "}\n"
     };
 
