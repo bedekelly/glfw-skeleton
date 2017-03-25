@@ -45,6 +45,13 @@ void render(double currentTime, gldata data) {
   glClearBufferfv(GL_COLOR, 0, color);
   glUseProgram(data.program);
 
+  GLfloat attrib[] = {
+    (float) sin(currentTime) * 0.5f,
+    (float) cos(currentTime) * 0.6f,
+    0.0f, 0.0f
+  };
+
+  glVertexAttrib4fv(0, attrib);
   glDrawArrays(GL_TRIANGLES, 0, 3);
 }
 
@@ -82,14 +89,17 @@ GLuint compileShaders() {
   // Source code for the vertex shader:
   static const GLchar* vertex_shader_source[] =
     {
-      "#version 410 core\n"
-      "\n"
+      "#version 410 core\n\n"
+      "layout (location = 0) in vec4 offset;\n"
+
       "void main(void){\n"
       "    const vec4 vertices[3] = vec4[3](\n"
+
       "        vec4(0.25, -0.25, 0.5, 1.0),\n"
       "        vec4(-0.25, -0.25, 0.5, 1.0),\n"
       "        vec4(0, 0.25, 0.5, 1.0));\n"
-      "    gl_Position = vertices[gl_VertexID];\n"
+      
+      "    gl_Position = vertices[gl_VertexID] + offset;\n"
       "}\n"
     };
 
