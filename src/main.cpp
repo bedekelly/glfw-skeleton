@@ -7,6 +7,7 @@
 #include "skeleton_utils.h"
 #include "main.h"
 
+
 int main(int argc, char **argv) {
   GLFWwindow* window = createWindow(".plain blue.");
   glClear(GL_COLOR_BUFFER_BIT);
@@ -43,8 +44,8 @@ void render(double currentTime, gldata data) {
   };
   glClearBufferfv(GL_COLOR, 0, color);
   glUseProgram(data.program);
-  glPointSize(40.0f);
-  glDrawArrays(GL_POINTS, 0, 1);
+
+  glDrawArrays(GL_TRIANGLES, 0, 3);
 }
 
 
@@ -84,7 +85,11 @@ GLuint compileShaders() {
       "#version 410 core\n"
       "\n"
       "void main(void){\n"
-      "    gl_Position = vec4(0.0, 0.0, 0.5, 1.0);\n"
+      "    const vec4 vertices[3] = vec4[3](\n"
+      "        vec4(0.25, -0.25, 0.5, 1.0),\n"
+      "        vec4(-0.25, -0.25, 0.5, 1.0),\n"
+      "        vec4(0, 0.25, 0.5, 1.0));\n"
+      "    gl_Position = vertices[gl_VertexID];\n"
       "}\n"
     };
 
