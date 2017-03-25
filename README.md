@@ -1,4 +1,4 @@
-# GLFW Skeleton
+# Mac GL
 
 I'm working through the OpenGL SuperBible v.7, using GLFW version 3 on MacOS and making any changes where necessary.
 
