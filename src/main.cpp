@@ -36,22 +36,27 @@ int main(int argc, char **argv) {
  */
 void render(double currentTime, gldata data) {
   static double TWO_PI = 3.14159 * 2;
-  const GLfloat color[] = {
+  const GLfloat backgroundColor[] = {
     (float) sin(currentTime) * 0.5f + 0.5f,  // Red
     (float) cos(currentTime) * 0.5f + 0.5f,  // Green
     0.0f,                                    // Blue
     1.0f                                     // Alpha
   };
-  glClearBufferfv(GL_COLOR, 0, color);
+  glClearBufferfv(GL_COLOR, 0, backgroundColor);
   glUseProgram(data.program);
 
-  GLfloat attrib[] = {
+  GLfloat offset[] = {
     (float) sin(currentTime) * 0.5f,
     (float) cos(currentTime) * 0.6f,
     0.0f, 0.0f
   };
 
-  glVertexAttrib4fv(0, attrib);
+  GLfloat color[] = {
+    0.6, 0.7, 0.8, 1.0
+  };
+
+  glVertexAttrib4fv(0, offset);
+  glVertexAttrib4fv(1, color);
   glDrawArrays(GL_TRIANGLES, 0, 3);
 }
 
@@ -91,6 +96,9 @@ GLuint compileShaders() {
     {
       "#version 410 core\n\n"
       "layout (location = 0) in vec4 offset;\n"
+      "layout (location = 1) in vec4 color;\n"
+
+      "out vec4 vs_color;\n"
 
       "void main(void){\n"
       "    const vec4 vertices[3] = vec4[3](\n"
@@ -100,6 +108,7 @@ GLuint compileShaders() {
       "        vec4(0, 0.25, 0.5, 1.0));\n"
       
       "    gl_Position = vertices[gl_VertexID] + offset;\n"
+      "    vs_color = color;\n"
       "}\n"
     };
 
@@ -107,12 +116,12 @@ GLuint compileShaders() {
   static const GLchar* fragment_shader_source[] =
     {
       "#version 410 core\n"
-      "\n"
+
+      "in vec4 vs_color;\n"
       "out vec4 color;\n"
-      "\n"
-      "void main(void)\n"
-      "{\n"
-      "    color = vec4(0.0, 0.8, 1.0, 1.0);\n"
+
+      "void main(void){\n"
+      "    color = vs_color;\n"
       "}\n"
     };
 
