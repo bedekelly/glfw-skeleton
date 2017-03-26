@@ -14,6 +14,7 @@ Every discrete example of an application in the book gets its own branch in this
 6. [Passing data from the Vertex Shader to the Fragment Shader](https://github.com/bedekelly/mac-gl/tree/passing-data)
 7. [Loading fragment and vertex shaders from disk](https://github.com/bedekelly/mac-gl/tree/load-shaders-from-file)
 8. [Tessellation control and evaluation shaders](https://github.com/bedekelly/mac-gl/tree/tessellation-control)
+9. [Geometry shader emitting vertices](https://github.com/bedekelly/mac-gl)
 
 Just hit `make` to build the project. The binary is `build/main.out`.
 
