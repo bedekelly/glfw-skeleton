@@ -11,12 +11,10 @@
 int main(int argc, char **argv) {
   GLFWwindow* window = createWindow("Tessellated Triangle");
   glClear(GL_COLOR_BUFFER_BIT);
-
   gldata data = glSetup();
   
   while (!glfwWindowShouldClose(window)) {
 
-    // Render a colour based on the current time.
     double time = glfwGetTime();
     render(time, data);
     
@@ -39,6 +37,7 @@ void render(double currentTime, gldata data) {
   glClearBufferfv(GL_COLOR, 0, bgColor);
 
   glUseProgram(data.program);
+  glPointSize(5.0f);
   glDrawArrays(GL_PATCHES, 0, 3);
 }
 
@@ -76,6 +75,7 @@ GLuint compileShaders() {
   GLuint fragment_shader;
   GLuint tc_shader;
   GLuint te_shader;
+  GLuint geom_shader;
   GLuint program;
 
   // Load, create and compile each shader:
@@ -83,6 +83,7 @@ GLuint compileShaders() {
   fragment_shader = compileShader(GL_FRAGMENT_SHADER, "fragment.fs");
   tc_shader = compileShader(GL_TESS_CONTROL_SHADER, "tessellation.tcs");
   te_shader = compileShader(GL_TESS_EVALUATION_SHADER, "tessellation.tes");
+  geom_shader = compileShader(GL_GEOMETRY_SHADER, "geometry.gs");
   
   // Create a program, attach shaders to it, and link it:
   program = glCreateProgram();
@@ -90,6 +91,7 @@ GLuint compileShaders() {
   glAttachShader(program, tc_shader);
   glAttachShader(program, te_shader);
   glAttachShader(program, fragment_shader);
+  glAttachShader(program, geom_shader);
   glLinkProgram(program);
 
   // Delete the shaders, since they've been attached to a program:
@@ -97,6 +99,7 @@ GLuint compileShaders() {
   glDeleteShader(tc_shader);
   glDeleteShader(te_shader);
   glDeleteShader(fragment_shader);
+  glDeleteShader(geom_shader);
 
   return program;
 }
