@@ -94,3 +94,25 @@ std::string loadShaderSource(std::string filename) {
 }
 
 
+GLuint compileShader(GLenum shaderType, std::string shaderFile) {
+
+  // Read in the shader source from disk:
+  std::string shaderStr = loadShaderSource(shaderFile);
+
+  // Cast the source string to a format GL will recognise:
+  const GLchar *shaderSource = const_cast<GLchar*>(shaderStr.c_str());
+
+  // Create and compile the shader:
+  GLuint shaderID = glCreateShader(shaderType);
+  glShaderSource(shaderID, 1, &shaderSource, NULL);
+  glCompileShader(shaderID);
+
+  // Display the shader's compilation info log:
+  GLint logLength;
+  glGetShaderiv(shaderID, GL_INFO_LOG_LENGTH, &logLength);
+  GLchar infoLog[logLength];
+  glGetShaderInfoLog(shaderID, logLength, NULL, infoLog);
+  std::cout << infoLog << std::endl;
+
+  return shaderID;
+}

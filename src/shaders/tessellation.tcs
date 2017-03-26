@@ -1,0 +1,20 @@
+#version 410 core
+
+layout (vertices = 3) out;
+
+void main(void) {
+
+     float tessellationLevel = 5.0;
+
+     // Set the inner and outer tessellation levels to 5.
+     if (gl_InvocationID == 0) {
+     	gl_TessLevelInner[0] = tessellationLevel;
+	gl_TessLevelOuter[0] = tessellationLevel;
+	gl_TessLevelOuter[1] = tessellationLevel;
+	gl_TessLevelOuter[2] = tessellationLevel;
+     }
+
+     // Copy the input to the output.
+     gl_out[gl_InvocationID].gl_Position =
+         gl_in[gl_InvocationID].gl_Position;
+}

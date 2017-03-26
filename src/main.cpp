@@ -9,7 +9,7 @@
 
 
 int main(int argc, char **argv) {
-  GLFWwindow* window = createWindow(".plain blue.");
+  GLFWwindow* window = createWindow("Tessellated Triangle");
   glClear(GL_COLOR_BUFFER_BIT);
 
   gldata data = glSetup();
@@ -35,29 +35,11 @@ int main(int argc, char **argv) {
  * to that colour.
  */
 void render(double currentTime, gldata data) {
-  static double TWO_PI = 3.14159 * 2;
-  const GLfloat backgroundColor[] = {
-    (float) sin(currentTime) * 0.5f + 0.5f,  // Red
-    (float) cos(currentTime) * 0.5f + 0.5f,  // Green
-    0.0f,                                    // Blue
-    1.0f                                     // Alpha
-  };
-  glClearBufferfv(GL_COLOR, 0, backgroundColor);
+  static const GLfloat bgColor[] = { 0.0f, 0.0f, 0.05f, 1.0f };
+  glClearBufferfv(GL_COLOR, 0, bgColor);
+
   glUseProgram(data.program);
-
-  GLfloat offset[] = {
-    (float) sin(currentTime) * 0.5f,
-    (float) cos(currentTime) * 0.6f,
-    0.0f, 0.0f
-  };
-
-  GLfloat color[] = {
-    0.6, 0.7, 0.8, 1.0
-  };
-
-  glVertexAttrib4fv(0, offset);
-  glVertexAttrib4fv(1, color);
-  glDrawArrays(GL_TRIANGLES, 0, 3);
+  glDrawArrays(GL_PATCHES, 0, 3);
 }
 
 
@@ -69,6 +51,9 @@ gldata glSetup() {
   data.program = compileShaders();
   glGenVertexArrays(1, &data.vao);
   glBindVertexArray(data.vao);
+
+  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+  
   return data;
 }
 
@@ -89,45 +74,28 @@ void glTearDown(gldata data) {
 GLuint compileShaders() {
   GLuint vertex_shader;
   GLuint fragment_shader;
+  GLuint tc_shader;
+  GLuint te_shader;
   GLuint program;
 
-  // Load the source code for both shaders:
-  std::string vshader_str = loadShaderSource("vertex.vs");
-  std::string fshader_str = loadShaderSource("fragment.fs");
-
-  const GLchar *vshader_source = const_cast<GLchar*>(vshader_str.c_str());
-  const GLchar *fshader_source = const_cast<GLchar*>(fshader_str.c_str());
-  
-  // Create and compile the vertex shader:
-  vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-  glShaderSource(vertex_shader, 1, &vshader_source, NULL);
-  glCompileShader(vertex_shader);
-
-  // Display the logs from compiling the vertex shader:
-  GLint logLength;
-  glGetShaderiv(vertex_shader, GL_INFO_LOG_LENGTH, &logLength);
-  GLchar* infoLog = new GLchar[logLength+1];
-  glGetShaderInfoLog(vertex_shader, logLength, NULL, infoLog);
-  std::cout << infoLog << std::endl;
-  
-  // Create and compile the fragment shader:
-  fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-  glShaderSource(fragment_shader, 1, &fshader_source, NULL);
-  glCompileShader(fragment_shader);
-
-  // GLint logLength;
-  glGetShaderiv(fragment_shader, GL_INFO_LOG_LENGTH, &logLength);
-  glGetShaderInfoLog(fragment_shader, logLength, NULL, infoLog);
-  std::cout << infoLog << std::endl;
+  // Load, create and compile each shader:
+  vertex_shader = compileShader(GL_VERTEX_SHADER, "vertex.vs");
+  fragment_shader = compileShader(GL_FRAGMENT_SHADER, "fragment.fs");
+  tc_shader = compileShader(GL_TESS_CONTROL_SHADER, "tessellation.tcs");
+  te_shader = compileShader(GL_TESS_EVALUATION_SHADER, "tessellation.tes");
   
   // Create a program, attach shaders to it, and link it:
   program = glCreateProgram();
   glAttachShader(program, vertex_shader);
+  glAttachShader(program, tc_shader);
+  glAttachShader(program, te_shader);
   glAttachShader(program, fragment_shader);
   glLinkProgram(program);
 
   // Delete the shaders, since they've been attached to a program:
   glDeleteShader(vertex_shader);
+  glDeleteShader(tc_shader);
+  glDeleteShader(te_shader);
   glDeleteShader(fragment_shader);
 
   return program;
