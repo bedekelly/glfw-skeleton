@@ -15,8 +15,7 @@ int main(int argc, char **argv) {
   while (!glfwWindowShouldClose(window)) {
 
     // Render a colour based on the current time.
-    double time = glfwGetTime();
-    render(time);
+    render();
 
     glfwSwapBuffers(window);
     glfwPollEvents();
@@ -30,13 +29,12 @@ int main(int argc, char **argv) {
  * Given a current time, calculate a colour and "clear" the screen
  * to that colour.
  */
-void render(double currentTime) {
-  static double TWO_PI = 3.14159 * 2;
+void render() {
   const GLfloat color[] = {
-    (float) sin(currentTime) * 0.5f + 0.5f,  // Red
-    (float) cos(currentTime) * 0.5f + 0.5f,  // Green
-    0.0f,                                    // Blue
-    1.0f                                     // Alpha
+    0.1f,  // Red
+    0.3f,  // Green
+    0.6f,  // Blue
+    1.0f   // Alpha
   };
   glClearBufferfv(GL_COLOR, 0, color);
 }
