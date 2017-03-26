@@ -1,6 +1,9 @@
 #include <iostream>
+#include <string>
 #include "GLFW/glfw3.h"
 #include "skeleton_utils.h"
+#include <fstream>
+#include <sstream>
 
 
 /**
@@ -67,3 +70,27 @@ void dirtyExit() {
   glfwTerminate();
   exit(EXIT_FAILURE);
 }
+
+
+/**
+ * Load the source code for a shader with a given filename.
+ */
+std::string loadShaderSource(std::string filename) {
+  std::string line;
+  std::string total;
+  std::ifstream myfile("src/shaders/" + filename);
+
+  if (myfile.is_open()) {
+    while (std::getline(myfile, line)) {
+      total.append(line);
+      total.append("\n");
+    }
+    myfile.close();
+  } else {
+    std::cerr << "Unable to open file." << std::endl;
+  }
+
+  return total;
+}
+
+

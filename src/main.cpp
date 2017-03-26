@@ -91,52 +91,19 @@ GLuint compileShaders() {
   GLuint fragment_shader;
   GLuint program;
 
-  // Source code for the vertex shader:
-  static const GLchar* vertex_shader_source[] =
-    {
-      "#version 410 core\n\n"
-      "layout (location = 0) in vec4 offset;\n"
-      "layout (location = 1) in vec4 color;\n"
+  // Load the source code for both shaders:
+  std::string vshader_str = loadShaderSource("vertex.vs");
+  std::string fshader_str = loadShaderSource("fragment.fs");
 
-      // Declare VS_OUT as an output interface block.
-      "out VS_OUT{\n"
-      "    vec4 color;"  // Send the colour to the next stage.
-      "} vs_out;"
-
-      "void main(void){\n"
-      "    const vec4 vertices[3] = vec4[3](\n"
-
-      "        vec4(0.25, -0.25, 0.5, 1.0),\n"
-      "        vec4(-0.25, -0.25, 0.5, 1.0),\n"
-      "        vec4(0, 0.25, 0.5, 1.0));\n"
-      
-      "    gl_Position = vertices[gl_VertexID] + offset;\n"
-      "    vs_out.color = color;\n"
-      "}\n"
-    };
-
-  // Source code for the fragment shader:
-  static const GLchar* fragment_shader_source[] =
-    {
-      "#version 410 core\n"
-
-      // Declare VS_OUT as an input interface block.
-      "in VS_OUT {\n"
-      "    vec4 color;\n"
-      "} fs_in;"
-
-      "out vec4 color;\n"
-
-      "void main(void){\n"
-      "    color = fs_in.color;\n"
-      "}\n"
-    };
-
+  const GLchar *vshader_source = const_cast<GLchar*>(vshader_str.c_str());
+  const GLchar *fshader_source = const_cast<GLchar*>(fshader_str.c_str());
+  
   // Create and compile the vertex shader:
   vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-  glShaderSource(vertex_shader, 1, vertex_shader_source, NULL);
+  glShaderSource(vertex_shader, 1, &vshader_source, NULL);
   glCompileShader(vertex_shader);
 
+  // Display the logs from compiling the vertex shader:
   GLint logLength;
   glGetShaderiv(vertex_shader, GL_INFO_LOG_LENGTH, &logLength);
   GLchar* infoLog = new GLchar[logLength+1];
@@ -145,9 +112,14 @@ GLuint compileShaders() {
   
   // Create and compile the fragment shader:
   fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-  glShaderSource(fragment_shader, 1, fragment_shader_source, NULL);
+  glShaderSource(fragment_shader, 1, &fshader_source, NULL);
   glCompileShader(fragment_shader);
 
+  // GLint logLength;
+  glGetShaderiv(fragment_shader, GL_INFO_LOG_LENGTH, &logLength);
+  glGetShaderInfoLog(fragment_shader, logLength, NULL, infoLog);
+  std::cout << infoLog << std::endl;
+  
   // Create a program, attach shaders to it, and link it:
   program = glCreateProgram();
   glAttachShader(program, vertex_shader);

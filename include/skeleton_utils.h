@@ -5,6 +5,6 @@ void cleanExit(GLFWwindow* window);
 GLFWwindow* createWindow(char const* title);
 void simpleErrorCallback(int errorCode, const char* errorMessage);
 void dirtyExit();
-
+std::string loadShaderSource(std::string filename);
 
 #endif
