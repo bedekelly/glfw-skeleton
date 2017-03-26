@@ -12,6 +12,7 @@ Every discrete example of an application in the book gets its own branch in this
 4. [Drawing a triangle to the screen](https://github.com/bedekelly/mac-gl/tree/triangle)
 5. [Moving the triangle using "in" variables](https://github.com/bedekelly/mac-gl/tree/triangle-offset)
 6. [Passing data from the Vertex Shader to the Fragment Shader](https://github.com/bedekelly/mac-gl/tree/passing-data)
+7. [Loading fragment and vertex shaders from disk](https://github.com/bedekelly/mac-gl/tree/load-shaders-from-file)
 
 Just hit `make` to build the project. The binary is `build/main.out`.
 
