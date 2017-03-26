@@ -9,7 +9,7 @@
 
 
 int main(int argc, char **argv) {
-  GLFWwindow* window = createWindow("Tessellated Triangle");
+  GLFWwindow* window = createWindow("Fragment Colour From Position");
   glClear(GL_COLOR_BUFFER_BIT);
   gldata data = glSetup();
   
@@ -37,8 +37,7 @@ void render(double currentTime, gldata data) {
   glClearBufferfv(GL_COLOR, 0, bgColor);
 
   glUseProgram(data.program);
-  glPointSize(5.0f);
-  glDrawArrays(GL_PATCHES, 0, 3);
+  glDrawArrays(GL_TRIANGLES, 0, 3);
 }
 
 
@@ -51,8 +50,6 @@ gldata glSetup() {
   glGenVertexArrays(1, &data.vao);
   glBindVertexArray(data.vao);
 
-  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-  
   return data;
 }
 
@@ -73,33 +70,21 @@ void glTearDown(gldata data) {
 GLuint compileShaders() {
   GLuint vertex_shader;
   GLuint fragment_shader;
-  GLuint tc_shader;
-  GLuint te_shader;
-  GLuint geom_shader;
   GLuint program;
 
   // Load, create and compile each shader:
   vertex_shader = compileShader(GL_VERTEX_SHADER, "vertex.vs");
   fragment_shader = compileShader(GL_FRAGMENT_SHADER, "fragment.fs");
-  tc_shader = compileShader(GL_TESS_CONTROL_SHADER, "tessellation.tcs");
-  te_shader = compileShader(GL_TESS_EVALUATION_SHADER, "tessellation.tes");
-  geom_shader = compileShader(GL_GEOMETRY_SHADER, "geometry.gs");
   
   // Create a program, attach shaders to it, and link it:
   program = glCreateProgram();
   glAttachShader(program, vertex_shader);
-  glAttachShader(program, tc_shader);
-  glAttachShader(program, te_shader);
   glAttachShader(program, fragment_shader);
-  glAttachShader(program, geom_shader);
   glLinkProgram(program);
 
   // Delete the shaders, since they've been attached to a program:
   glDeleteShader(vertex_shader);
-  glDeleteShader(tc_shader);
-  glDeleteShader(te_shader);
   glDeleteShader(fragment_shader);
-  glDeleteShader(geom_shader);
 
   return program;
 }
