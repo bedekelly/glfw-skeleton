@@ -9,7 +9,7 @@
 
 
 int main(int argc, char **argv) {
-  GLFWwindow* window = createWindow(".plain blue.");
+  GLFWwindow* window = createWindow("1. Opening a Window");
   glClear(GL_COLOR_BUFFER_BIT);
 
   while (!glfwWindowShouldClose(window)) {
